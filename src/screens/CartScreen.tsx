@@ -20,13 +20,13 @@ const CustomImage = ({ source, style, ...props }: any) => {
   const [imageLoading, setImageLoading] = useState(true);
 
   const handleImageError = () => {
-    console.log('❌ Image failed to load:', source?.uri);
+    // console.log('❌ Image failed to load:', source?.uri);
     setImageError(true);
     setImageLoading(false);
   };
 
   const handleImageLoad = () => {
-    console.log('✅ Image loaded successfully:', source?.uri);
+    // console.log('✅ Image loaded successfully:', source?.uri);
     setImageLoading(false);
   };
 
@@ -189,12 +189,16 @@ export default function CartScreen({ navigation }: any) {
         ]);
       }
 
-      await API.put(`/carts/${userId}/item`, {
+      const response = await API.put(`/carts/${userId}/item`, {
         product_id: productId,
         size,
         quantity,
         type,
-      });
+      });      
+      if(response.data.success == false) {
+        Alert.alert('Số lượng trong kho không đủ');
+        return;
+      }
       await fetchCart(userId);
     } catch (err) {
       console.error('❌ Lỗi cập nhật số lượng:', err);
@@ -270,23 +274,6 @@ export default function CartScreen({ navigation }: any) {
       ? product?.discount_price ?? product?.price ?? 0
       : product?.price ?? 0;
 
-    // console.log('Cart item structure:', {
-    //   itemId: item._id,
-    //   productId,
-    //   productName: product?.name,
-    //   productImage: product?.image,
-    //   productImages: product?.images,
-    //   finalImageUrl: getProductImageUrl(product),
-    //   itemSize: item.size,
-    //   itemQuantity: item.quantity,
-    // });
-
-    console.log('Thông tin sản phẩm', {
-      type: item.type,
-      name: product.name,
-      price: product.price,
-      discountPrice: product.discount_price,
-    });
 
     return (
       <View style={styles.itemContainer}>

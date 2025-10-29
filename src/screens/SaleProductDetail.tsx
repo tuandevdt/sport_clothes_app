@@ -120,7 +120,14 @@ const SaleProductDetail = ({ route, navigation }: any) => {
   };
 
   // --- Quantity ---
-  const increaseQuantity = () => setQuantity((prev) => prev + 1);
+const increaseQuantity = () => {
+  if (!selectedSize) return;
+
+  const sizeObj = product.sizes.find((s: any) => s.size === selectedSize);
+  if (sizeObj && quantity < sizeObj.quantity) {
+    setQuantity(prev => prev + 1);
+  }
+};
   const decreaseQuantity = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
 
   // --- Cart ---
@@ -129,6 +136,18 @@ const SaleProductDetail = ({ route, navigation }: any) => {
       Alert.alert('Vui lòng chọn size trước khi thêm vào giỏ hàng.');
       return;
     }
+
+    const sizeObj = product.sizes.find((s: any) => s.size === selectedSize);
+  if (!sizeObj || sizeObj.quantity === 0) {
+    Alert.alert('Size này đã hết hàng!');
+    return;
+  }
+
+  if (quantity > sizeObj.quantity) {
+    Alert.alert(`Chỉ còn ${sizeObj.quantity} sản phẩm size ${selectedSize}!`);
+    return;
+  }
+  
     try {
       const userId = await AsyncStorage.getItem('userId');
       if (!userId) {
@@ -313,17 +332,20 @@ const SaleProductDetail = ({ route, navigation }: any) => {
         <Text style={styles.stock}>Kho: {product.stock}</Text>
 
         {/* Sizes */}
-        {!!product.size?.length && (
+        {!!product.sizes?.length && (
           <View style={styles.sizeRow}>
             <Text style={styles.label}>Size:</Text>
-            {product.size.map((size: string) => (
+            {product.sizes.filter((s: any) => s.quantity > 0).map((s: any) => (
               <TouchableOpacity
-                key={size}
-                style={[styles.sizeBox, selectedSize === size && styles.sizeBoxSelected]}
-                onPress={() => setSelectedSize(size)}
+                key={s.size}
+                style={[styles.sizeBox, selectedSize === s.size && styles.sizeBoxSelected]}
+                onPress={() => {
+            setSelectedSize(s.size);
+            setQuantity(1); // Reset khi đổi size
+          }}
               >
-                <Text style={[styles.sizeText, selectedSize === size && styles.sizeTextSelected]}>
-                  {size}
+                <Text style={[styles.sizeText, selectedSize === s.size && styles.sizeTextSelected]}>
+                  {s.size} ({s.quantity})
                 </Text>
               </TouchableOpacity>
             ))}
