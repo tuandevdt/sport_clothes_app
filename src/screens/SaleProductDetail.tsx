@@ -170,8 +170,13 @@ const increaseQuantity = () => {
         total: totalPrice,
       };
 
-      await API.post('/carts/add', cartItem);
+      const response = await API.post('/carts/add', cartItem);
 
+      if(response.data.success == false) {
+              Alert.alert('Số lượng trong kho không đủ');
+              return;
+      }
+          
       Snackbar.show({
         text: 'Đã thêm vào giỏ hàng!',
         duration: Snackbar.LENGTH_SHORT,

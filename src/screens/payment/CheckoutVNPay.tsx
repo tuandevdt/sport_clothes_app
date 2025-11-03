@@ -195,6 +195,7 @@ const CheckoutVNPay = ({ route, navigation }: any) => {
                     name: item.product_id?.name || item.name,
                     purchaseQuantity: item.quantity || 1,
                     price: item.product_id?.price || item.price,
+                    size: item.size
                 })),
                 shippingFee,
                 voucher: voucher ? {

@@ -249,7 +249,7 @@ export default function CartScreen({ navigation }: any) {
       const product = item.product_id || item;
       const key = `${product._id}_${item.size}`;
       return selectedItems[key];
-    });
+    });    
 
     if (selected.length === 0) {
       Alert.alert('Thông báo', 'Vui lòng chọn ít nhất một sản phẩm để mua');

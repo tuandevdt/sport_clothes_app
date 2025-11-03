@@ -133,7 +133,8 @@ export default function CheckoutScreen({ route, navigation }: any) {
             id_product: product._id,
             name: product.name,
             purchaseQuantity: item.quantity,
-            price: getFinalPrice(product)   // ✅ giá sau giảm
+            price: getFinalPrice(product),   // ✅ giá sau giảm
+            size: item.size,
           };
         }),
         totalPrice: finalTotal,

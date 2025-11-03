@@ -187,7 +187,12 @@ const ProductDetailScreen = ({route, navigation}: any) => {
         color: 'Default',
       };
 
-      await API.post('/carts/add', cartItem);
+      const response = await API.post('/carts/add', cartItem);
+      
+      if(response.data.success == false) {
+              Alert.alert('Số lượng trong kho không đủ');
+              return;
+      }
 
       Snackbar.show({
         text: 'Đã thêm vào giỏ hàng!',
